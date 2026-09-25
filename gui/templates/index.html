@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vyom - AI Beyond Limits</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <div class="tagline-top">NOT JUST AN ASSISTANT... A COMPANION</div>
+    <h1 class="logo">VYOM</h1>
+    <div class="subtitle">AI BEYOND LIMITS</div>
+  </header>
+
+  <div class="orb-wrap">
+    <div class="orb-ring"></div>
+    <div class="orb-ring2"></div>
+    <div class="orb-core"></div>
+  </div>
+
+  <div class="status-line"><span class="status-dot"></span>VYOM Active...</div>
+
+  <div class="features">
+    <div class="feature-chip">🎙 Voice</div>
+    <div class="feature-chip">🧠 AI Brain</div>
+    <div class="feature-chip">💾 Memory</div>
+    <div class="feature-chip">🛡 Security</div>
+    <div class="feature-chip">🌐 Internet</div>
+    <div class="feature-chip">💻 Coding</div>
+  </div>
+
+  <div class="chat-container">
+    <div id="chat"></div>
+    <div id="inputRow">
+      <input id="msgInput" placeholder="Vyom se kuch pucho..." autocomplete="off" />
+      <button id="sendBtn" onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+
+  <footer>Better Everyday — I am not just software. I am Vyom.</footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
