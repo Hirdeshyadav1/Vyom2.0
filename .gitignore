@@ -1,0 +1,4 @@
+*.key
+*.db
+*_credentials.json
+*_audit.log
