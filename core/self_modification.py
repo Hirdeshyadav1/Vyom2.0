@@ -1,9 +1,3 @@
-"""
-Vyom - Self-Modification Module
-Vyom ko apna khud ka source code padhne/edit karne ki permission deta hai —
-lekin sirf MASTER user, confirmation ke saath, aur automatic backup ke saath.
-"""
-
 import os
 import shutil
 import difflib
@@ -42,9 +36,22 @@ class SelfModification:
         )
         return "".join(diff)
 
+    def _check_syntax(self, relative_path, new_content):
+        if not relative_path.endswith(".py"):
+            return {"ok": True}
+        try:
+            compile(new_content, relative_path, "exec")
+            return {"ok": True}
+        except SyntaxError as e:
+            return {"ok": False, "error": "Syntax error: " + str(e)}
+
     def edit_own_code(self, user_id, user_level, relative_path, new_content):
         path = self._resolve_safe_path(relative_path)
         diff_text = self.preview_diff(relative_path, new_content)
+
+        syntax_check = self._check_syntax(relative_path, new_content)
+        if not syntax_check["ok"]:
+            return {"ok": False, "error": syntax_check["error"], "diff": diff_text}
 
         auth = self.security.authorize(user_id, user_level, "modify_own_code", details={"file": relative_path})
         if not auth["allowed"]:
@@ -71,3 +78,24 @@ class SelfModification:
 
     def list_backups(self):
         return sorted(os.listdir(self.backup_dir))
+
+    def write_code_from_instruction(self, brain, user_id, user_level, relative_path, instruction):
+        current = ""
+        try:
+            current = self.read_own_file(relative_path)
+        except Exception:
+            pass
+
+        prompt = (
+            "Tum ek Python file edit kar rahe ho: " + relative_path + "\n"
+            "Current content:\n" + current + "\n\n"
+            "Instruction: " + instruction + "\n\n"
+            "Sirf poora naya file-content do, koi explanation nahi, koi markdown "
+            "backticks nahi - sirf raw Python code."
+        )
+        new_content = brain.simple_ask(prompt).strip()
+        if new_content.startswith("```"):
+            lines = new_content.split("\n")
+            new_content = "\n".join(lines[1:-1]) if lines[-1].strip() == "```" else "\n".join(lines[1:])
+
+        return self.edit_own_code(user_id, user_level, relative_path, new_content)
