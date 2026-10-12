@@ -124,7 +124,6 @@ class VyomOrchestrator:
 
         self.personality = PersonalityManager(default=Personality.VYOM)
 
-        self.security.set_confirmation_callback(lambda a, r, d: True)
 
     def _cli_confirm(self, action, risk, details):
         print("\n[Vyom Security] Dangerous action requested: " + action + " (risk=" + risk.name + ")")
